@@ -4,16 +4,19 @@
 
 const char* vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec2 aPosition;\n"
-    "uniform mat4 transform;\n"
+    "uniform mat4 transform;\n"  //Matrix variable
+     "uniform mat4 view;\n"  // View Matrix als Uniform Variable
+    //"uniform mat4 projection;\n" // Projektionsmatrix als Uniform Variable
     "void main() {\n"
-    "   gl_Position = transform * vec4(aPosition, 0.0, 1.0);\n"
-    "}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
+    "   gl_Position =  view * transform *vec4(aPosition, 0.0, 1.0);\n"
+    "}\0"; // Kombinaton voj m Transformationsmatrizen
+   
+    const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main() {\n"
     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\n\0";
+
 
 GLuint compileShader(GLenum type, const char* source) {
     GLuint shader = glCreateShader(type);

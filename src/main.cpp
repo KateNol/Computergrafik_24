@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <math.h>
-#include "matrix_operations.hpp"
-#include "shader.cpp"
+#include "utils/matrix_operations.hpp"
+#include "shader/shader.hpp"
+
 
 
 #define M_PI 3.14159265358979323846
@@ -42,9 +43,31 @@ void draw(GLuint VAO, GLuint shaderProgram) {
         GLint transformLocation = glGetUniformLocation(shaderProgram, "transform");
         glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transformMatrix); // scallierte/rotierte/transl Matrix an den Vertexshader übergeben
       
+        //view-Matrix an den Shader übergeben
+        GLfloat viewMatrix[16];
+        identity(viewMatrix);
+        
+        float eye[3]={0.0f,0.0f,3.0f}; //Ursprung der Kamera
+        float look[3]= {0.0f,0.0f,0.0f};//Blickrichtung
+        float up[3]= {0.0f,1.0f,0.0f}; //nach oben
+        lookAt(eye,look,up,viewMatrix);
+
+        /*for(int i = 0 ; i<16; i++){
+
+            printf("%f, ", viewMatrix[i]);
+           
+        }
+         printf("\n\n");
+
+        */
+        
+       // GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
+       // glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix);
+
         // Dreieck rendern
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+
         glBindVertexArray(0);
      
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
