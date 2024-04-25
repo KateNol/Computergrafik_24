@@ -10,7 +10,7 @@
 
 
 #define M_PI 3.14159265358979323846
-
+ static int indexSize =0;
 
 
 
@@ -33,11 +33,11 @@ void draw(GLuint VAO, GLuint shaderProgram) {
         float angle = (GLfloat)glfwGetTime() * M_PI / 4.0f;
         float transformMatrix[16]; //sind alle Operationen gespeichert 
         identity(transformMatrix); // die baue ich als Einheitsmatrix (damit keine 0en)
-        GLfloat scaleVector[3] = {0.7f, 0.3f, 1.0f};
-        scale(transformMatrix, transformMatrix, scaleVector);
-        rotatez(transformMatrix, transformMatrix, angle); 
-        GLfloat transVector[3] = {0.0f, 0.0f, 0.0f};
-        translate(transformMatrix, transformMatrix,transVector);
+        //GLfloat scaleVector[3] = {0.7f, 0.3f, 1.0f};
+        //scale(transformMatrix, transformMatrix, scaleVector);
+        //rotatez(transformMatrix, transformMatrix, angle); 
+        //GLfloat transVector[3] = {0.0f, 0.0f, 0.0f};
+        //translate(transformMatrix, transformMatrix,transVector);
 
         // Transformationsmatrix an den Shader übergeben
         GLint transformLocation = glGetUniformLocation(shaderProgram, "transform");
@@ -52,21 +52,17 @@ void draw(GLuint VAO, GLuint shaderProgram) {
         float up[3]= {0.0f,1.0f,0.0f}; //nach oben
         lookAt(eye,look,up,viewMatrix);
 
-        /*for(int i = 0 ; i<16; i++){
-
-            printf("%f, ", viewMatrix[i]);
-           
+        for (int i = 0; i < 16; i++) {
+            printf("%f, ",viewMatrix[i]);
         }
-         printf("\n\n");
-
-        */
+        printf("\n\n");
         
-       // GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
-       // glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix);
+        GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
+        glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix);
 
         // Dreieck rendern
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
      
@@ -104,36 +100,36 @@ int main() {
     GLuint VAO, VBO, EBO; //neu
     
      GLfloat vertices[] = {
-             //   x   y
-             -0.4, -0.3,  //links unten  0 unique
-             -0.2, -0.3,  // rechts unten 1
-             -0.4,  0.7,  // links oben 2
-             -0.2,  0.7,  // rechts oben 3 unique
 
-
-              0.2,  0.7,  // links oben 4 unique
-              0.2, -0.3,  // links unten 5
-              0.4,  0.7,  // rechts oben 6
-              0.4, -0.3,  // rechts unten 7 unique
-
-              -0.2, 0.3,
-              -0.2, 0.1,
-               0.2, 0.3,
-               0.2, 0.1,
+        0.5, 0.5, -0.5,
+        0.5, -0.5, -0.5,
+        0.5, 0.5, 0.5,
+        0.5, -0.5, 0.5,
+        -0.5, 0.5, -0.5,
+        -0.5, -0.5, -0.5,
+        -0.5, 0.5, 0.5,
+        -0.5, -0.5, 0.5,
     
-};
+    };
 
     GLuint indices [] = {
         
-    0, 1, 2,  // Erstes Dreieck des ersten Vierecks
-    3, 2, 1,  // Zweites Dreieck des ersten Vierecks
-    4, 5, 6,  // Erstes Dreieck des zweiten Vierecks
-    7, 5, 6,   // Zweites Dreieck des zweiten Vierecks
-    8, 9, 10,
-    11,10,9
+    5,3,1, 
+    3,8,4,
+    7,6,8,
+    2,8,6,
+    1,4,2,
+    5,2,6,
+    5,7,3,
+    3,7,8,
+    7,5,6,
+    2,4,8,
+    1,3,4,
+    5,1,2,
 
     };
 
+    indexSize = sizeof(indices)/sizeof(GLuint);
     
 
 // Neue Vertex-Daten für ein Viereck  // gepsiegelt
@@ -149,10 +145,10 @@ int main() {
 
     glVertexAttribPointer(
         0,                      // location attribute number in vertex shader  
-        2,                      // size of the vertex attribute
+        3,                      // size of the vertex attribute
         GL_FLOAT,               // type of the data
         GL_FALSE,               // if we want the data to be normalized
-        2 * sizeof(GLfloat),         // stride and tells us the space between consecutive vertex attributes
+        3 * sizeof(GLfloat),         // stride and tells us the space between consecutive vertex attributes
         (void*)0                // offset of where the position data begins in the buffer
     );
     glEnableVertexAttribArray(0);

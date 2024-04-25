@@ -1,0 +1,29 @@
+GLfloat vertices[] = {
+             //   x   y  
+             -0.4, -0.3,  //links unten  0 unique
+             -0.2, -0.3,  // rechts unten 1
+             -0.4,  0.7,  // links oben 2
+             -0.2,  0.7,  // rechts oben 3 unique
+
+
+              0.2,  0.7,  // links oben 4 unique
+              0.2, -0.3,  // links unten 5
+              0.4,  0.7,  // rechts oben 6
+              0.4, -0.3,  // rechts unten 7 unique
+
+              -0.2, 0.3,
+              -0.2, 0.1,
+               0.2, 0.3,
+               0.2, 0.1,
+    
+};
+
+    GLuint indices [] = {
+        
+    0, 1, 2,  // Erstes Dreieck des ersten Vierecks
+    3, 2, 1,  // Zweites Dreieck des ersten Vierecks
+    4, 5, 6,  // Erstes Dreieck des zweiten Vierecks
+    7, 5, 6,   // Zweites Dreieck des zweiten Vierecks
+    8, 9, 10,
+    11,10,9
+);

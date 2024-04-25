@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "matrix_operations.hpp"
+#include "utils/matrix_operations.hpp"
 #include <cmath>
 
 
@@ -115,36 +115,38 @@ void rotatez(float *out, const float *in, float angle) {
     void lookAt(float *eye, float *look, float *up, float *out) { // crossproduct funktion schreiben
         float n [3];
         n [0]= eye[0]- look [0];
-        n [0]= eye[1]- look [1];
-        n [0]= eye[2]- look [2];
+        n [1]= eye[1]- look [1];
+        n [2]= eye[2]- look [2];
+
+        //printf("%f %f %f \n\n",n[0],n[1],n[2]);
     
         float u [3];
         u [0] = (up[1] * n[2]) - (up[2]* n[1]);
         u [1] = (up[2] * n[0]) - (up[0]* n[2]);
         u [2] = (up[0] * n[1]) - (up[1]* n[0]);
 
-         float v [3];
-        v [0] = (n[1] * u[2]) - (n[2]* u[1]);
-        v [1] = (n[2] * u[0]) - (n[0]* u[2]);
-        v [2] = (n[0] * u[1]) - (n[1]* u[0]);
-
         //Normalisierung: koord in cg von -1 --> +1 und die 600*800 pixel müssen darin abgebildet werden ( Länge des vektors auf 1 setzt)
          float nnorm [3];
          float unorm [3];
-         float vnorm [3];
+         //float vnorm [3];
         
          normalize(nnorm,n);
-         
-
-        printf("%f %f %f \n\n",nnorm[0],nnorm[1],nnorm[2]);
-           
-
          normalize(unorm,u);
-         normalize(vnorm,v);
+         //normalize(vnorm,v);
+        
+
+           float v [3];
+        v [0] = (nnorm[1] * unorm[2]) - (n[2]* u[1]);
+        v [1] = (nnorm[2] * unorm[0]) - (n[0]* u[2]);
+        v [2] = (nnorm[0] * unorm[1]) - (n[1]* u[0]);
+
+          
 
          float tx = -(dot(unorm ,eye));
-         float ty = -(dot(vnorm ,eye));
+         float ty = -(dot(v ,eye));
          float tz = -(dot(nnorm ,eye));
+
+        
 
 
         /*
@@ -156,18 +158,19 @@ void rotatez(float *out, const float *in, float angle) {
          */
           
          out[0] = unorm[0]; 
-         out[1] = vnorm[0];
+         out[1] = v[0];
          out[2] = nnorm[0];
          out[4] = unorm[1];
-         out[5] = vnorm[1];
+         out[5] = v[1];
          out[6] = nnorm[1];
          out[8] = unorm[2];
-         out[9] = vnorm[2];
+         out[9] = v[2];
          out[10]= nnorm[2];
          out[12] = tx;
          out[13] = ty;
          out[14] = tz;
 
+        
     }
 
         
