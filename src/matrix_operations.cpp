@@ -13,10 +13,29 @@ void identity(float *out) {
         fprintf(stderr, "Fehler: NULL-Zeiger übergeben\n");
         return;
     }
+
+    out[0] = 1.0f;
+    out[1] = 0.0f;
+    out[2] = 0.0f;
+    out[3] = 0.0f;
+    out[4] = 0.0f;
+    out[5] = 1.0f;
+    out[6] = 0.0f;
+    out[7] = 0.0f;
+    out[8] = 0.0f;
+    out[9] = 0.0f;
+    out[10] = 1.0f;
+    out[11] = 0.0f;
+    out[12] = 0.0f;
+    out[13] = 0.0f;
+    out[14] = 0.0f;
+    out[15] = 1.0f;
     
+    /*
     for (int i = 0; i < 16; ++i) {
         out[i] = (i % 5 == 0) ? 1.0f : 0.0f;
-    }
+    */
+    
 }
 
 /*Funktion zur Translation einer Matrix
@@ -136,9 +155,9 @@ void rotatez(float *out, const float *in, float angle) {
         
 
            float v [3];
-        v [0] = (nnorm[1] * unorm[2]) - (n[2]* u[1]);
-        v [1] = (nnorm[2] * unorm[0]) - (n[0]* u[2]);
-        v [2] = (nnorm[0] * unorm[1]) - (n[1]* u[0]);
+        v [0] = (nnorm[1] * unorm[2]) - (nnorm[2]* unorm[1]);
+        v [1] = (nnorm[2] * unorm[0]) - (nnorm[0]* unorm[2]);
+        v [2] = (nnorm[0] * unorm[1]) - (nnorm[1]* unorm[0]);
 
           
 
@@ -173,6 +192,40 @@ void rotatez(float *out, const float *in, float angle) {
         
     }
 
+    void perspective(float *out, float fovy, float aspect, float near, float far) { 
+        if (out == NULL) {
+
+            fprintf(stderr, "Fehler: NULL- Zeiger Übergeben\n");
+            return;
+
+        }
+        // wegen 0en in den array (Invarianz um wirklich damit zu arbeiten was wir brauchen)
+        identity(out); // wegen c++ nicht mehr &out nötig 
+
+        float f = 1.0f / tan(fovy * 0.5f * M_PI/ 180.0f);
+        float nf = 1.0f / (near- far);
+
+        out[0] = 1.0f / (aspect*tan(fovy * 0.5f * M_PI/ 180.0f));
+       // out[1] = 0.0f;
+       // out[2] = 0.0f;
+      //  out[3] = 0.0f;
+
+     //   out[4] = 0.0f;
+        out[5] = f;
+      //  out[6] = 0.0f;
+      //  out[7] = 0.0f;
+
+       // out[8] = 0.0f;
+      //  out[9] = 0.0f;
+        out[10] = (far + near) *nf;
+        out[11] = -1.0f;
+
+      //  out[12] = 0.0f;
+      //  out[13] = 0.0f;
+        out[14] = -((2.0f *far* near) *nf);
+        out[15] = 0.0f; //muss bleiben
+
+   }
         
 
 

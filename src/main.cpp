@@ -6,10 +6,11 @@
 #include <math.h>
 #include "utils/matrix_operations.hpp"
 #include "shader/shader.hpp"
+#include  <cmath>
 
 
 
-#define M_PI 3.14159265358979323846
+//#define M_PI 3.14159265358979323846
  static int indexSize =0;
 
 
@@ -30,16 +31,25 @@ void draw(GLuint VAO, GLuint shaderProgram) {
         Vertexshader das Dreieck mit den entpsrechenden Weten darstellen
         
         */ 
+       // Perspektivische Projektionsmatrix an den Shader übergeben
+        GLfloat projectionMatrix[16];
+        //identity(projectionMatrix);
+        perspective(projectionMatrix,45,800/600,0.1f,100.0f);
+        GLint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+        glUniformMatrix4fv(projectionLocation, 1, GL_FALSE,projectionMatrix);
+
+
         float angle = (GLfloat)glfwGetTime() * M_PI / 4.0f;
         float transformMatrix[16]; //sind alle Operationen gespeichert 
         identity(transformMatrix); // die baue ich als Einheitsmatrix (damit keine 0en)
         //GLfloat scaleVector[3] = {0.7f, 0.3f, 1.0f};
         //scale(transformMatrix, transformMatrix, scaleVector);
-        //rotatez(transformMatrix, transformMatrix, angle); 
+        //rotatez(transformMatrix, transformMatrix, 30.0f); 
         //GLfloat transVector[3] = {0.0f, 0.0f, 0.0f};
         //translate(transformMatrix, transformMatrix,transVector);
 
         // Transformationsmatrix an den Shader übergeben
+        
         GLint transformLocation = glGetUniformLocation(shaderProgram, "transform");
         glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transformMatrix); // scallierte/rotierte/transl Matrix an den Vertexshader übergeben
       
@@ -52,10 +62,12 @@ void draw(GLuint VAO, GLuint shaderProgram) {
         float up[3]= {0.0f,1.0f,0.0f}; //nach oben
         lookAt(eye,look,up,viewMatrix);
 
-        for (int i = 0; i < 16; i++) {
+       /*
+       for (int i = 0; i < 16; i++) {
             printf("%f, ",viewMatrix[i]);
         }
         printf("\n\n");
+       */ 
         
         GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
         glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix);
@@ -108,7 +120,7 @@ int main() {
         -0.5, 0.5, -0.5,
         -0.5, -0.5, -0.5,
         -0.5, 0.5, 0.5,
-        -0.5, -0.5, 0.5,
+        -0.5, -0.5, 0.5
     
     };
 
@@ -164,10 +176,7 @@ int main() {
     if(shaderProgram == 0) {
         return -1;
     }
-    
-    
-   
-    
+
    
     // Haupt-Render-Loop
     while (!glfwWindowShouldClose(window)) {

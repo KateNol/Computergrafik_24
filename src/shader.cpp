@@ -5,10 +5,10 @@
 const char* vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPosition;\n"
     "uniform mat4 transform;\n"  //Matrix variable
-    "uniform mat4 view;\n"  // View Matrix als Uniform Variable
-    //"uniform mat4 projection;\n" // Projektionsmatrix als Uniform Variable
+     "uniform mat4 view;\n"  // View Matrix als Uniform Variable
+   // "uniform mat4 projection;\n" // Projektionsmatrix als Uniform Variable
     "void main() {\n"
-    "   gl_Position = view* transform *vec4(aPosition, 1.0);\n"
+    "   gl_Position = view * transform * vec4(aPosition, 1.0);\n"
     "}\0"; // Kombinaton voj m Transformationsmatrizen
    
     const char* fragmentShaderSource = "#version 330 core\n"

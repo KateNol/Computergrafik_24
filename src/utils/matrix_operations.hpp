@@ -28,4 +28,7 @@ float dot(float *a, float *b);
 // Funktion zur Berechnung einer View-Matrix basierend auf Eye, Look und Up Vektoren
 void lookAt(float *eye, float *look, float *up, float *out);
 
+// Funktion zur Berechnung einer Perspektiv-Projektionsmatrix
+void perspective(float *out, float fovy, float aspect, float near, float far);
+
 #endif /* MATRIX_OPERATIONS_HPP */
